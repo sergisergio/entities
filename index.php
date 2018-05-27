@@ -14,22 +14,40 @@ $db = new PDO('mysql:host=localhost;dbname=POO;charset=utf8', 'root', 'root');
 
 class Personnage
 {
-	private $_id;
-	private $_nom;
-	private $_forcePerso;
-	private $_degats;
-	private $_niveau;
-	private $_experience;
+	protected $_id;
+	protected $_nom;
+	protected $_forcePerso;
+	protected $_degats;
+	protected $_niveau;
+	protected $_experience;
 
-	public function __construct($id, $nom, $forcePerso, $degats, $niveau, $experience) 
+
+	/*
+     * Méthode de construction
+     */
+	public function __construct(array $data) 
 	  {
-	  	$this->setId($id);
-	  	$this->setNom($nom);
-	    $this->setForcePerso($forcePerso); // Initialisation de la force.
-	    $this->setDegats($degats); // Initialisation des dégâts.
-	    $this->setNiveau($niveau);
-	    $this->setExperience($experience);
+	  	$this->hydrate($data);
+	  	//$this->setId($id);
+	  	//$this->setNom($nom);
+	    //$this->setForcePerso($forcePerso); // Initialisation de la force.
+	    //$this->setDegats($degats); // Initialisation des dégâts.
+	    //$this->setNiveau($niveau);
+	    //$this->setExperience($experience);
 	  }
+
+	/*
+     * Methode d'hydratation
+     */
+    public function hydrate(array $datas) {
+        foreach ($datas as $key => $value) {
+            $method = 'set'.ucfirst($key);
+            
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
 
 	// Il faut bien sûr implémenter les getters et setters.
 	// Getter : méthode chargée de renvoyer la valeur d'un attribut.
@@ -107,7 +125,7 @@ class Personnage
 	{
 		$degats = (int) $degats;
 
-		if ($niveau >= 1 && $degats <= 100)
+		if ($degats >= 1 && $degats <= 100)
 		{
 			$this->_degats = $degats;
 		}
@@ -147,7 +165,7 @@ while ($data = $request->fetch(PDO::FETCH_ASSOC)) // Chaque entrée sera récup�
 	// On passe les données ( stockées dans un tableau) concernant le personnage au constructeur de la classe.
 	// On admet que le constructeur de la classe appelle chaque setter pour assigner les valeurs qu'on lui a données aux attributs correspondants.
 	echo '<p>Affichage avec objets :</p>';
-	$perso = new Personnage();
+	$perso = new Personnage($data);
 
 	echo $perso->nom(), ' a ', $perso->forcePerso(), ' de force, ', $perso->degats(), ' de dégâts, ', $perso->experience(), ' d\'expérience et est au niveau ', $perso->niveau();
 }
