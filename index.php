@@ -168,4 +168,6 @@ while ($data = $request->fetch(PDO::FETCH_ASSOC)) // Chaque entrée sera récup�
 	$perso = new Personnage($data);
 
 	echo $perso->nom(), ' a ', $perso->forcePerso(), ' de force, ', $perso->degats(), ' de dégâts, ', $perso->experience(), ' d\'expérience et est au niveau ', $perso->niveau();
+    
+    echo 'Voir code pour les différences';
 }
